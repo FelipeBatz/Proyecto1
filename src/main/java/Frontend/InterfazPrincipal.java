@@ -4,8 +4,12 @@
  */
 package Frontend;
 
+import Backend.Archivo;
+import Backend.Token;
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -183,7 +187,19 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAbrirMouseExited
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
+        JFileChooser selector = new JFileChooser();
+        selector.setAcceptAllFileFilterUsed(false);
+        selector.setFileFilter(new FileNameExtensionFilter("Seleccione el archivo pz", "pz"));
+        selector.showOpenDialog(this);
+        pathArchivo = String.valueOf(selector.getSelectedFile());
 
+        String archivoLeido;
+
+        Archivo leerArchivo = new Archivo();
+        archivoLeido = leerArchivo.LeerArchivo(pathArchivo);
+
+        txtAreaArchivoLeido.setEnabled(false);
+        txtAreaArchivoLeido.setText(archivoLeido);
 
     }//GEN-LAST:event_btnAbrirActionPerformed
 
@@ -208,7 +224,8 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAnalizarMouseExited
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
-        // TODO add your handling code here:
+        Token token = new Token();
+        token.analizarDirectiva(txtAreaArchivoLeido.getText());
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void btnGuardarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseEntered

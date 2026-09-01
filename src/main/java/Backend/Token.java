@@ -14,10 +14,15 @@ import java.util.Map;
 public class Token {
 
     private Map<String, String> reservadas;
+    private StringBuilder lexema;
+    private String palabra;
+
+    public Token() {
+        crearTablaPalabrasReservadas();
+    }
 
     public void crearTablaPalabrasReservadas() {
         reservadas = new HashMap<>();
-
         reservadas.put("@modelo", "DIRECTIVA");
         reservadas.put("@rol", "DIRECTIVA");
         reservadas.put("@Formato", "DIRECTIVA");
@@ -44,6 +49,48 @@ public class Token {
         reservadas.put("COMO", "CONECTORES");
         reservadas.put("->", "CONECTORES");
 
+    }
+
+    public void reconcerLexema(StringBuilder lexema) {
+        palabra = lexema.toString();
+        if (reservadas.containsKey(String.valueOf(palabra))) {
+            System.out.println("lexema: " + palabra + " / tipo: " + reservadas.get(palabra));
+        }
+    }
+
+    public void analizarDirectiva(String texto) {
+        for (int i = 0; i < texto.length(); i++) {
+
+            if (texto.charAt(i) == '@') {
+                lexema = new StringBuilder();
+                lexema.append(texto.charAt(i));
+                i++;
+                while (i < texto.length() && esLetra(texto.charAt(i))) {
+                    lexema.append(texto.charAt(i));
+                    i++;
+                }
+                reconcerLexema(lexema);
+            }
+            if (i < texto.length() && esLetra(texto.charAt(i))) {
+
+                lexema = new StringBuilder();
+                while (i < texto.length() && esLetra(texto.charAt(i))) {
+                    lexema.append(texto.charAt(i));
+                    i++;
+                }
+                reconcerLexema(lexema);
+            }
+            if (i < texto.length() && texto.charAt(i) == '"') {
+                lexema = new StringBuilder();
+                i++;
+                while (i < texto.length() && texto.charAt(i) != '"') {
+                    lexema.append(texto.charAt(i));
+                    i++;
+                }
+                System.out.println("\n" + lexema + "\n" + " / tipo: " + reservadas.get(palabra));
+            }
+
+        }
     }
 
     public void analizarTexto(String texto) {

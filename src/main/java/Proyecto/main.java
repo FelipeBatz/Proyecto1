@@ -10,17 +10,13 @@ package Proyecto;
  */
 
 import Backend.Token;
+import Frontend.InterfazPrincipal;
 
 
 public class main {
 
     public static void main(String[] args) {
-        Token token = new Token();
-        token.crearTablaPalabrasReservadas();
-        
-        token.analizarTexto("@modelo (AGENTE) asdf");
-
-       
-
+        InterfazPrincipal interfaz = new InterfazPrincipal();
+        interfaz.setVisible(true);
     }
 }

@@ -17,29 +17,25 @@ import java.util.Scanner;
  */
 public class Archivo {
 
-    public class LeerArchivo {
+    private String textoLeido;
 
-        private String textoLeido;
+    public String LeerArchivo(String pathArchivo) {
 
-        public String leerTextoConScanner(String pathArchivo) {
+        textoLeido = "";
 
-            textoLeido = "";
+        File miArchivo = new File(pathArchivo);
+        try (InputStream inputStream = new FileInputStream(miArchivo)) {
+            Scanner scanner = new Scanner(inputStream);
+            String linea = scanner.nextLine();
+            while (true) {
 
-            File miArchivo = new File(pathArchivo);
-            try (InputStream inputStream = new FileInputStream(miArchivo)) {
-                Scanner scanner = new Scanner(inputStream);
-                String linea = scanner.nextLine();
-                while (true) {
-
-                    textoLeido = textoLeido + linea + "\n";
-                    linea = scanner.nextLine();
-                }
-            } catch (NoSuchElementException | IOException e) {
+                textoLeido = textoLeido + linea + "\n";
+                linea = scanner.nextLine();
             }
-
-            return textoLeido;
+        } catch (NoSuchElementException | IOException e) {
         }
 
+        return textoLeido;
     }
 
 }
