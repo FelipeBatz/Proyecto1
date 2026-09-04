@@ -4,8 +4,7 @@
  */
 package Backend;
 
-import java.util.HashMap;
-import java.util.Map;
+import Frontend.JFrameTablaTokens;
 
 /**
  *
@@ -13,55 +12,65 @@ import java.util.Map;
  */
 public class Token {
 
-    private Map<String, String> reservadas;
     private StringBuilder lexema;
     private String palabra;
+    private int noToken;
+    private JFrameTablaTokens tablaTokens;
+    private int columna;
+    private int fila;
+    private PalabrasReservadas reservadas;
+    private boolean esCadena;
+    private boolean esComentario;
+    private boolean esDelimi;
+    private boolean esOpera;
+    private int inicioColumna;
 
-    public Token() {
-        crearTablaPalabrasReservadas();
-    }
-
-    public void crearTablaPalabrasReservadas() {
-        reservadas = new HashMap<>();
-        reservadas.put("@modelo", "DIRECTIVA");
-        reservadas.put("@rol", "DIRECTIVA");
-        reservadas.put("@Formato", "DIRECTIVA");
-
-        reservadas.put("AGENTE", "PALABRA_RESERVADA_DE_ESTRUCTURA");
-        reservadas.put("contexto", "PALABRA_RESERVADA_DE_ESTRUCTURA");
-        reservadas.put("variable", "PALABRA_RESERVADA_DE_ESTRUCTURA");
-        reservadas.put("EJECUTAR", "PALABRA_RESERVADA_DE_ESTRUCTURA");
-        reservadas.put("EXPORTAR", "PALABRA_RESERVADA_DE_ESTRUCTURA");
-
-        reservadas.put("PREGUNTAR", "COMANDOS_DE_IA");
-        reservadas.put("GENERAR", "COMANDOS_DE_IA");
-        reservadas.put("RESUMIR", "COMANDOS_DE_IA");
-        reservadas.put("ANALIZAR", "COMANDOS_DE_IA");
-        reservadas.put("TRADUCIR", "COMANDOS_DE_IA");
-        reservadas.put("CLASIFICAR", "COMANDOS_DE_IA");
-        reservadas.put("EXTRAER", "COMANDOS_DE_IA");
-
-        reservadas.put("CARGAR", "FUNCIONES");
-
-        reservadas.put("SOBRE", "CONECTORES");
-        reservadas.put("DESDE", "CONECTORES");
-        reservadas.put("EN", "CONECTORES");
-        reservadas.put("COMO", "CONECTORES");
-        reservadas.put("->", "CONECTORES");
-
+    public Token(JFrameTablaTokens tablaTokens, PalabrasReservadas reservadas) {
+        this.reservadas = reservadas;
+        this.tablaTokens = tablaTokens;
+        fila++;
+        columna++;
     }
 
     public void reconcerLexema(StringBuilder lexema) {
         palabra = lexema.toString();
-        if (reservadas.containsKey(String.valueOf(palabra))) {
-            System.out.println("lexema: " + palabra + " / tipo: " + reservadas.get(palabra));
+        if (reservadas.comprobarLexema(String.valueOf(palabra))) {
+            noToken++;
+            tablaTokens.agregarToken(noToken, palabra, reservadas.obtenerTipo(palabra), inicioColumna, fila);
         }
+
+        if (esCadena) {
+            noToken++;
+            tablaTokens.agregarToken(noToken, palabra, "Literal", inicioColumna, fila);
+        }
+
+        if (esComentario) {
+            noToken++;
+            tablaTokens.agregarToken(noToken, palabra, "Comentario", inicioColumna, fila);
+        }
+
+        if (esDelimi) {
+            noToken++;
+            tablaTokens.agregarToken(noToken, palabra, "Delimitador", inicioColumna, fila);
+        }
+
+        if (esOpera) {
+            noToken++;
+            tablaTokens.agregarToken(noToken, palabra, "Operador", inicioColumna, fila);
+        }
+
     }
 
     public void analizarDirectiva(String texto) {
+
         for (int i = 0; i < texto.length(); i++) {
 
+            if (texto.charAt(i) == '\n') {
+                fila++;
+            }
+
             if (texto.charAt(i) == '@') {
+                inicioColumna = columna;
                 lexema = new StringBuilder();
                 lexema.append(texto.charAt(i));
                 i++;
@@ -72,7 +81,7 @@ public class Token {
                 reconcerLexema(lexema);
             }
             if (i < texto.length() && esLetra(texto.charAt(i))) {
-
+                inicioColumna = columna;
                 lexema = new StringBuilder();
                 while (i < texto.length() && esLetra(texto.charAt(i))) {
                     lexema.append(texto.charAt(i));
@@ -80,44 +89,78 @@ public class Token {
                 }
                 reconcerLexema(lexema);
             }
+
             if (i < texto.length() && texto.charAt(i) == '"') {
+                inicioColumna = columna;
+                esCadena = true;
                 lexema = new StringBuilder();
+                lexema.append(texto.charAt(i));
+                reconcerLexema(lexema);
+                lexema.setLength(0);
                 i++;
                 while (i < texto.length() && texto.charAt(i) != '"') {
                     lexema.append(texto.charAt(i));
                     i++;
                 }
-                System.out.println("\n" + lexema + "\n" + " / tipo: " + reservadas.get(palabra));
+                reconcerLexema(lexema);
+                esCadena = false;
             }
 
-        }
-    }
-
-    public void analizarTexto(String texto) {
-        for (int i = 0; i < texto.length(); i++) {
-            //------q0 -> q2
-            if (texto.charAt(i) == '@' || esLetra(texto.charAt(i))) {
-
-                StringBuilder lexema = new StringBuilder();
-                lexema.append(texto.charAt(i));
-                i++;
-                while (i < texto.length() && esLetra(texto.charAt(i))) {
+            if (i < texto.length() - 1 && texto.charAt(i) == '/' && texto.charAt(i + 1) == '*') {
+                inicioColumna = columna;
+                esComentario = true;
+                lexema = new StringBuilder();
+                i += 2;
+                while (i < texto.length() - 1 && !(texto.charAt(i) == '*' && texto.charAt(i + 1) == '/')) {
                     lexema.append(texto.charAt(i));
                     i++;
                 }
-                String palabra = lexema.toString();
-                if (reservadas.containsKey(palabra)) {
-                    System.out.println(palabra + " / " + reservadas.get(palabra));
-                } else {
-                    System.out.println("Error lexico");
-                }
+                reconcerLexema(lexema);
+                esComentario = false;
             }
-            //--------------------
+
+            if (i < texto.length() - 1 && texto.charAt(i) == '/' && texto.charAt(i + 1) == '/') {
+                inicioColumna = columna;
+                esComentario = true;
+                lexema = new StringBuilder();
+                i += 2;
+                while (i < texto.length() - 1 && texto.charAt(i) != '\n') {
+                    lexema.append(texto.charAt(i));
+                    i++;
+                }
+                reconcerLexema(lexema);
+                esComentario = false;
+            }
+
             if (i < texto.length() && esDelimitador(texto.charAt(i))) {
-                System.out.println(texto.charAt(i) + " DELIMITADOR");
+                inicioColumna = columna;
+                esDelimi = true;
+                lexema = new StringBuilder();
+                lexema.append(texto.charAt(i));
+                reconcerLexema(lexema);
+                esDelimi = false;
+            }
+
+            if (i < texto.length() && esOperador(texto.charAt(i))) {
+                inicioColumna = columna;
+                esOpera = true;
+                lexema = new StringBuilder();
+                lexema.append(texto.charAt(i));
+                reconcerLexema(lexema);
+                esOpera = false;
+            }
+            columna++;
+        }
+    }
+
+    public boolean esOperador(char caracter) {
+        char[] delimitadores = {'+', '='};
+        for (int i = 0; i < delimitadores.length; i++) {
+            if (caracter == delimitadores[i]) {
+                return true;
             }
         }
-
+        return false;
     }
 
     public boolean esDelimitador(char caracter) {

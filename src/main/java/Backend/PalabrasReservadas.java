@@ -20,7 +20,7 @@ public class PalabrasReservadas {
 
         reservadas.put("@modelo", "DIRECTIVA");
         reservadas.put("@rol", "DIRECTIVA");
-        reservadas.put("@Formato", "DIRECTIVA");
+        reservadas.put("@formato", "DIRECTIVA");
 
         reservadas.put("AGENTE", "PALABRA_RESERVADA_DE_ESTRUCTURA");
         reservadas.put("contexto", "PALABRA_RESERVADA_DE_ESTRUCTURA");
@@ -46,11 +46,12 @@ public class PalabrasReservadas {
 
     }
 
-    public boolean reconcerPalabraReservada(String texto) {
-        
-        System.out.println(reservadas.get(texto));
-        return reservadas.containsKey(texto);
-        
+    public boolean comprobarLexema(String lexema){
+        return reservadas.containsKey(lexema);
+    }
+    
+    public String obtenerTipo(String lexema){
+        return reservadas.get(lexema);
     }
 
 }

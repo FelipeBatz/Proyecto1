@@ -1,0 +1,23 @@
+digraph AFDDirectivas {
+
+    rankdir=LR;
+
+    inicio [shape=point];
+
+    // Estados
+    q0 [shape=circle, label="q0"];
+    q1 [shape=doublecircle, label="q1"];
+    qE [shape=circle, label="qE"];
+
+ 
+    inicio -> q0;
+
+    q0 -> q1 [label="@"];
+
+    q1 -> q1 [label="Letra"];
+
+    q0 -> qE [label="Letra"];
+
+    q1 -> qE [label="@"];
+
+}

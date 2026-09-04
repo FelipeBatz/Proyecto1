@@ -5,10 +5,15 @@
 package Frontend;
 
 import Backend.Archivo;
+import Backend.PalabrasReservadas;
 import Backend.Token;
 import java.awt.Color;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -18,15 +23,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class InterfazPrincipal extends javax.swing.JFrame {
 
     private String pathArchivo;
+    private PalabrasReservadas reservadas;
 
-    public InterfazPrincipal() {
+    public InterfazPrincipal(PalabrasReservadas reservadas) {
         initComponents();
+        this.reservadas = reservadas;
         setLocationRelativeTo(null);
-
-        setIconImage(
-                new ImageIcon(getClass().getResource("/Imagenes/icono.png")).getImage()
-        );
-
+        setIconImage(new ImageIcon(getClass().getResource("/Imagenes/icono.png")).getImage());
         String noFilas = "<html>";
         for (int i = 1; i < 500; i++) {
             noFilas = noFilas + i + "<br>";
@@ -60,7 +63,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         setTitle("Analizador Léxico");
         setMinimumSize(new java.awt.Dimension(900, 849));
 
-        jPanel3.setBackground(new java.awt.Color(204, 255, 204));
+        jPanel3.setBackground(new java.awt.Color(255, 204, 204));
 
         btnAbrir.setBackground(new java.awt.Color(204, 255, 255));
         btnAbrir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -187,6 +190,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAbrirMouseExited
 
     private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
+        txtAreaArchivoLeido.setEnabled(true);
         JFileChooser selector = new JFileChooser();
         selector.setAcceptAllFileFilterUsed(false);
         selector.setFileFilter(new FileNameExtensionFilter("Seleccione el archivo pz", "pz"));
@@ -212,7 +216,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarMouseExited
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
+        txtAreaArchivoLeido.setEnabled(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnAnalizarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAnalizarMouseEntered
@@ -224,8 +228,11 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAnalizarMouseExited
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
-        Token token = new Token();
+
+        JFrameTablaTokens tablaTokens = new JFrameTablaTokens();
+        Token token = new Token(tablaTokens, reservadas);
         token.analizarDirectiva(txtAreaArchivoLeido.getText());
+        tablaTokens.setVisible(true);
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void btnGuardarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseEntered
@@ -237,7 +244,43 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarMouseExited
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
+
+        JFileChooser guardar = new JFileChooser();
+
+
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de texto (*.pz)", "pz");
+        guardar.setFileFilter(filtro);
+
+        int opcion = guardar.showSaveDialog(this);
+
+        if (opcion == JFileChooser.APPROVE_OPTION) {
+
+            File archivo = guardar.getSelectedFile();
+
+        
+            if (!archivo.getName().toLowerCase().endsWith(".pz")) {
+                archivo = new File(archivo.getAbsolutePath() + ".pz");
+            }
+
+            try {
+                FileWriter escritor = new FileWriter(archivo);
+
+                escritor.write(txtAreaArchivoLeido.getText());
+
+                escritor.close();
+
+                JOptionPane.showMessageDialog(this,
+                        "Archivo guardado correctamente.");
+
+            } catch (IOException e) {
+
+                JOptionPane.showMessageDialog(this,
+                        "Error al guardar el archivo: " + e.getMessage());
+            }
+
+        }
+
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
 

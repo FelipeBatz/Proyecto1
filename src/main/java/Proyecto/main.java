@@ -9,14 +9,23 @@ package Proyecto;
  * @author felip
  */
 
-import Backend.Token;
+
+import Backend.PalabrasReservadas;
 import Frontend.InterfazPrincipal;
 
 
+
 public class main {
+    
 
     public static void main(String[] args) {
-        InterfazPrincipal interfaz = new InterfazPrincipal();
+        
+        PalabrasReservadas reservadas = new PalabrasReservadas();
+        reservadas.crearTablaPalabrasReservadas();
+        
+        InterfazPrincipal interfaz = new InterfazPrincipal(reservadas);
         interfaz.setVisible(true);
+        
+    
     }
 }
