@@ -19,13 +19,13 @@ public class main {
     
 
     public static void main(String[] args) {
-        
+                
         PalabrasReservadas reservadas = new PalabrasReservadas();
         reservadas.crearTablaPalabrasReservadas();
         
         InterfazPrincipal interfaz = new InterfazPrincipal(reservadas);
         interfaz.setVisible(true);
         
-    
+   
     }
 }

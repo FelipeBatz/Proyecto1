@@ -6,6 +6,7 @@ package Frontend;
 
 import Backend.Archivo;
 import Backend.PalabrasReservadas;
+import Backend.ReporteTokens;
 import Backend.Token;
 import java.awt.Color;
 import java.io.File;
@@ -228,11 +229,14 @@ public class InterfazPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAnalizarMouseExited
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
-
+        ReporteTokens nuevoReporteTokens = new ReporteTokens();
         JFrameTablaTokens tablaTokens = new JFrameTablaTokens();
         Token token = new Token(tablaTokens, reservadas);
-        token.analizarDirectiva(txtAreaArchivoLeido.getText());
+        
+        nuevoReporteTokens.crearReporte();
+        token.analizarArchivo(txtAreaArchivoLeido.getText(), nuevoReporteTokens);
         tablaTokens.setVisible(true);
+        nuevoReporteTokens.cerrarReporte();
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void btnGuardarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseEntered
