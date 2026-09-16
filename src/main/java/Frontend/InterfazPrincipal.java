@@ -54,6 +54,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnAnalizar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
+        btnAFD = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         filas = new javax.swing.JLabel();
@@ -64,7 +65,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         setTitle("Analizador Léxico");
         setMinimumSize(new java.awt.Dimension(900, 849));
 
-        jPanel3.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel3.setBackground(new java.awt.Color(255, 255, 204));
 
         btnAbrir.setBackground(new java.awt.Color(204, 255, 255));
         btnAbrir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -130,6 +131,21 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         });
         btnGuardar.addActionListener(this::btnGuardarActionPerformed);
 
+        btnAFD.setBackground(new java.awt.Color(204, 255, 255));
+        btnAFD.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnAFD.setForeground(new java.awt.Color(0, 0, 0));
+        btnAFD.setText("AFD");
+        btnAFD.setFocusPainted(false);
+        btnAFD.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAFDMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAFDMouseExited(evt);
+            }
+        });
+        btnAFD.addActionListener(this::btnAFDActionPerformed);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -143,7 +159,9 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                 .addComponent(btnAnalizar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnGuardar)
-                .addContainerGap(430, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 352, Short.MAX_VALUE)
+                .addComponent(btnAFD)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,6 +173,10 @@ public class InterfazPrincipal extends javax.swing.JFrame {
                     .addComponent(btnAnalizar)
                     .addComponent(btnGuardar))
                 .addContainerGap(16, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAFD)
+                .addGap(14, 14, 14))
         );
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_START);
@@ -232,7 +254,7 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         ReporteTokens nuevoReporteTokens = new ReporteTokens();
         JFrameTablaTokens tablaTokens = new JFrameTablaTokens();
         Token token = new Token(tablaTokens, reservadas);
-        
+
         nuevoReporteTokens.crearReporte();
         token.analizarArchivo(txtAreaArchivoLeido.getText(), nuevoReporteTokens);
         tablaTokens.setVisible(true);
@@ -251,7 +273,6 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
         JFileChooser guardar = new JFileChooser();
 
-
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivos de texto (*.pz)", "pz");
         guardar.setFileFilter(filtro);
 
@@ -261,7 +282,6 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
             File archivo = guardar.getSelectedFile();
 
-        
             if (!archivo.getName().toLowerCase().endsWith(".pz")) {
                 archivo = new File(archivo.getAbsolutePath() + ".pz");
             }
@@ -287,8 +307,24 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void btnAFDMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAFDMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAFDMouseEntered
+
+    private void btnAFDMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAFDMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAFDMouseExited
+
+    private void btnAFDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAFDActionPerformed
+       VentanaAFD ventanaAFD = new VentanaAFD();
+       ventanaAFD.setVisible(true);
+    }//GEN-LAST:event_btnAFDActionPerformed
+    public class AFD extends javax.swing.JFrame {
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAFD;
     private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnAnalizar;
     private javax.swing.JButton btnEditar;

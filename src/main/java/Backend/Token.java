@@ -21,7 +21,7 @@ public class Token {
     private boolean esLiteral;
     private boolean esComentario;
     private boolean esPalabra;
-    private int iRespaldo;
+    private int noError;
 
     public Token(JFrameTablaTokens tablaTokens, PalabrasReservadas reservadas) {
         this.reservadas = reservadas;
@@ -66,6 +66,12 @@ public class Token {
 
     }
 
+    public void reportarError(String tipoError, int fila, int columna) {
+        noError++;
+        System.out.println(noError + " " + tipoError + " Fila: " + fila + " Columna: " + columna);
+
+    }
+
     public void analizarArchivo(String texto, ReporteTokens nuevoReporteTokens) {
 
         for (int i = 0; i < texto.length(); i++) {
@@ -73,13 +79,12 @@ public class Token {
             char caracterActual = texto.charAt(i);
             columna++;
 
-            
             // q0 -> q1, esto nos permite reconcer la estructura de las palabras como palabras reservadas, conectores , comandos IA o identificadores
             if (esLetra(caracterActual) || caracterActual == '_' || caracterActual == '@') {
                 esPalabra = true;
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
-                lexema.append(caracterActual);
+                lexema.append(texto.charAt(i));
                 i++;
                 columna++;
                 while (i < texto.length() && (esLetra(texto.charAt(i)) || esDigito(texto.charAt(i)) || texto.charAt(i) == '_')) {
@@ -105,12 +110,17 @@ public class Token {
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
                 i++;
-                while (i < texto.length() && texto.charAt(i) != '"') {
+                while (i < texto.length() && texto.charAt(i) != '"' && texto.charAt(i) != '\n') {
                     lexema.append(texto.charAt(i));
                     i++;
                     columna++;
                 }
-                reconcerLexema(lexema, nuevoReporteTokens, colInicio + 1);
+                if (i < texto.length() && texto.charAt(i) == '"') {
+                    reconcerLexema(lexema, nuevoReporteTokens, colInicio + 1);
+                } else {
+                    reportarError("no se cerro la cadena", fila, colInicio);
+                }
+                
                 esLiteral = false;
             }
 
@@ -121,9 +131,13 @@ public class Token {
                 StringBuilder lexema = new StringBuilder();
                 i += 2;
                 while (i < texto.length() - 1 && !(texto.charAt(i) == '*' && texto.charAt(i + 1) == '/')) {
+                    if (texto.charAt(i) == '\n') {
+                        fila++;
+                    }
                     lexema.append(texto.charAt(i));
                     i++;
                 }
+                
                 reconcerLexema(lexema, nuevoReporteTokens, colInicio);
                 esComentario = false;
             }
@@ -132,7 +146,6 @@ public class Token {
                 esComentario = true;
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
-                lexema = new StringBuilder();
                 i += 2;
                 while (i < texto.length() - 1 && texto.charAt(i) != '\n') {
                     lexema.append(texto.charAt(i));
@@ -144,17 +157,18 @@ public class Token {
 
             //q0 -> q10 esto nos permite detectar el conector "->"
             if (i < texto.length() - 1 && caracterActual == '-' && texto.charAt(i + 1) == '>') {
-
+                esPalabra = true;
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
-                lexema.append(caracterActual);
+                lexema.append(texto.charAt(i));
                 lexema.append(texto.charAt(i + 1));
-
+                i++;
                 reconcerLexema(lexema, nuevoReporteTokens, colInicio);
+                esPalabra = false;
 
             }
 
-            //q0 -> q10 esto nos permite detectar el conector "->"
+            //q0 -> q12 nos permite detectar los numeros enteros y decimales
             if (i < texto.length() && esDigito(caracterActual)) {
                 esLiteral = true;
                 int colInicio = columna;
@@ -184,6 +198,11 @@ public class Token {
                 esLiteral = false;
             }
 
+            System.out.print(texto.charAt(i));
+
+            
+
+            // Nos permite contabilizar las lines y reciniciar las columnas cuando estas acaben
             if (i < texto.length() && texto.charAt(i) == '\n') {
                 columna = 0;
                 fila++;

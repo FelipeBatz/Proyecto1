@@ -46,7 +46,7 @@ public class JFrameTablaTokens extends javax.swing.JFrame {
         setTitle("Tokens");
         setMinimumSize(new java.awt.Dimension(550, 650));
 
-        jPanel2.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel2.setBackground(new java.awt.Color(204, 255, 204));
         jPanel2.setForeground(new java.awt.Color(255, 204, 204));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N

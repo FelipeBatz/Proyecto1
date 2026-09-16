@@ -4,6 +4,9 @@
  */
 package Backend;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +17,7 @@ import java.util.Map;
 public class PalabrasReservadas {
 
     private Map<String, String> reservadas;
+    
 
     public void crearTablaPalabrasReservadas() {
         reservadas = new HashMap<>();
