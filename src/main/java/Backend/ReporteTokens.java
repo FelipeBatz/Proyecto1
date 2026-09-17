@@ -41,10 +41,11 @@ public class ReporteTokens {
                     + "}");
 
             escribir.write("body {"
-                    + "font-family: Arial, sans-serif;"
-                    + "background-color: white;"
-                    + "color: white;"
-                    + "padding: 40px;"
+                    + "font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;"
+                    + "background: linear-gradient(135deg, #0f172a, #1e293b);"
+                    + "min-height: 100vh;"
+                    + "color: #e2e8f0;"
+                    + "padding: 50px 20px;"
                     + "}");
 
             escribir.write(".contenedor {"
@@ -53,46 +54,71 @@ public class ReporteTokens {
                     + "margin: auto;"
                     + "}");
 
+            escribir.write("h1 {"
+                    + "text-align: center;"
+                    + "font-size: 34px;"
+                    + "font-weight: 700;"
+                    + "letter-spacing: 1px;"
+                    + "margin-bottom: 8px;"
+                    + "color: #f8fafc;"
+                    + "}");
+
+            escribir.write("h1 span {"
+                    + "background: linear-gradient(90deg, #38bdf8, #6366f1);"
+                    + "-webkit-background-clip: text;"
+                    + "background-clip: text;"
+                    + "color: transparent;"
+                    + "}");
+
+            escribir.write("h1::after {"
+                    + "content: \"\";"
+                    + "display: block;"
+                    + "width: 120px;"
+                    + "height: 4px;"
+                    + "border-radius: 4px;"
+                    + "margin: 16px auto 40px;"
+                    + "background: linear-gradient(90deg, #38bdf8, #6366f1);"
+                    + "}");
+
             escribir.write("table {"
                     + "width: 100%;"
-                    + "border-collapse: collapse;"
+                    + "border-collapse: separate;"
+                    + "border-spacing: 0;"
                     + "background-color: #1e293b;"
-                    + "border: 3px solid #2563eb;"
-                    + "border-radius: 10px;"
+                    + "border-radius: 14px;"
                     + "overflow: hidden;"
-                    + "}");
-
-            escribir.write("th {"
-                    + "padding: 15px;"
-                    + "text-align: center;"
-                    + "font-size: 16px;"
-                    + "border: 1px solid #60a5fa;"
-                    + "}");
-
-            escribir.write("td {"
-                    + "padding: 14px;"
-                    + "text-align: center;"
+                    + "box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);"
                     + "border: 1px solid #334155;"
                     + "}");
 
             escribir.write("thead {"
-                    + "background-color: #2563eb;"
+                    + "background: linear-gradient(90deg, #2563eb, #6366f1);"
                     + "}");
 
             escribir.write("th {"
-                    + "padding: 15px;"
+                    + "padding: 16px;"
                     + "text-align: center;"
-                    + "font-size: 16px;"
+                    + "font-size: 14px;"
+                    + "text-transform: uppercase;"
+                    + "letter-spacing: 0.5px;"
+                    + "font-weight: 600;"
+                    + "color: #f8fafc;"
                     + "}");
 
             escribir.write("td {"
                     + "padding: 14px;"
                     + "text-align: center;"
+                    + "font-size: 15px;"
                     + "border-bottom: 1px solid #334155;"
+                    + "color: #cbd5e1;"
                     + "}");
 
             escribir.write("tbody tr {"
-                    + "transition: 0.3s;"
+                    + "transition: background-color 0.2s ease, transform 0.2s ease;"
+                    + "}");
+
+            escribir.write("tbody tr:nth-child(even) {"
+                    + "background-color: #24324a;"
                     + "}");
 
             escribir.write("tbody tr:hover {"
@@ -101,34 +127,6 @@ public class ReporteTokens {
 
             escribir.write("tbody tr:last-child td {"
                     + "border-bottom: none;"
-                    + "}");
-
-            escribir.write("h1 {"
-                    + "text-align: center;"
-                    + "font-size: 38px;"
-                    + "font-weight: 700;"
-                    + "letter-spacing: 2px;"
-                    + "margin-bottom: 35px;"
-                    + "color: #ffffff;"
-                    + "text-shadow: 0 0 5px #ee0b0b,"
-                    + "0 0 15px #fa6060,"
-                    + "0 0 25px #fa6060;"
-                    + "}");
-
-            escribir.write("h1 span {"
-                    + "color: white;"
-                    + "}");
-
-            escribir.write("h1::after {"
-                    + "content: \"\";"
-                    + "display: block;"
-                    + "width: 150px;"
-                    + "height: 3px;"
-                    + "margin: 12px auto 0;"
-                    + "background: linear-gradient(90deg,"
-                    + "transparent,"
-                    + "#df763a,"
-                    + "transparent);"
                     + "}");
 
             escribir.write("</style>");

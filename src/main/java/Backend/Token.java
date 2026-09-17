@@ -198,7 +198,7 @@ public class Token {
                 esLiteral = false;
             }
 
-            System.out.print(texto.charAt(i));
+         
 
             
 

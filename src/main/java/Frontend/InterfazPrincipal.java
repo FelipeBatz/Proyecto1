@@ -6,6 +6,7 @@ package Frontend;
 
 import Backend.Archivo;
 import Backend.PalabrasReservadas;
+import Backend.ReporteEstadisticas;
 import Backend.ReporteTokens;
 import Backend.Token;
 import java.awt.Color;
@@ -16,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -259,6 +261,14 @@ public class InterfazPrincipal extends javax.swing.JFrame {
         token.analizarArchivo(txtAreaArchivoLeido.getText(), nuevoReporteTokens);
         tablaTokens.setVisible(true);
         nuevoReporteTokens.cerrarReporte();
+        
+        
+
+        ReporteEstadisticas reporte = new ReporteEstadisticas();
+        reporte.obtenerEstadisticas(tablaTokens.obtenerTabla());
+        reporte.crearHtmlEstadisticas();
+        
+        
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
     private void btnGuardarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseEntered

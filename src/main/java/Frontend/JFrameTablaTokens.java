@@ -4,9 +4,11 @@
  */
 package Frontend;
 
+import Backend.ReporteEstadisticas;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -14,7 +16,6 @@ import javax.swing.table.DefaultTableModel;
  * @author felip
  */
 public class JFrameTablaTokens extends javax.swing.JFrame {
-
 
     public JFrameTablaTokens() {
         initComponents();
@@ -24,13 +25,19 @@ public class JFrameTablaTokens extends javax.swing.JFrame {
 
         jTableTokens.getTableHeader().setForeground(Color.BLACK);
         jTableTokens.getTableHeader().setBackground(Color.YELLOW);
-        
+
     }
-    public void agregarToken(int noToken, String lexema, String tipo, int columna, int fila){
+
+    public void agregarToken(int noToken, String lexema, String tipo, int columna, int fila) {
         DefaultTableModel modelo = (DefaultTableModel) jTableTokens.getModel();
         modelo.addRow(new Object[]{noToken, lexema, tipo, columna, fila});
-       
+
     }
+
+    public JTable obtenerTabla(){
+        return jTableTokens;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
