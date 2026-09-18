@@ -6,6 +6,7 @@ package Frontend;
 
 import Backend.Archivo;
 import Backend.PalabrasReservadas;
+import Backend.ReporteErrores;
 import Backend.ReporteEstadisticas;
 import Backend.ReporteTokens;
 import Backend.Token;
@@ -254,17 +255,24 @@ public class InterfazPrincipal extends javax.swing.JFrame {
 
     private void btnAnalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizarActionPerformed
         ReporteTokens nuevoReporteTokens = new ReporteTokens();
-        JFrameTablaTokens tablaTokens = new JFrameTablaTokens();
-        Token token = new Token(tablaTokens, reservadas);
+        ReporteErrores nuevoReporteErrores = new ReporteErrores();
+        ReporteEstadisticas reporte = new ReporteEstadisticas();
+        
+        TablaTokens tablaTokens = new TablaTokens();
+        TablaErrores tablaErrores = new TablaErrores();
+        Token token = new Token(tablaTokens,tablaErrores, reservadas);
+        
 
         nuevoReporteTokens.crearReporte();
-        token.analizarArchivo(txtAreaArchivoLeido.getText(), nuevoReporteTokens);
+        
+        token.analizarArchivo(txtAreaArchivoLeido.getText(), nuevoReporteTokens, nuevoReporteErrores);
         tablaTokens.setVisible(true);
+        tablaErrores.setVisible(true);
+        
+        
         nuevoReporteTokens.cerrarReporte();
+        nuevoReporteErrores.cerrarReporte();
         
-        
-
-        ReporteEstadisticas reporte = new ReporteEstadisticas();
         reporte.obtenerEstadisticas(tablaTokens.obtenerTabla());
         reporte.crearHtmlEstadisticas();
         

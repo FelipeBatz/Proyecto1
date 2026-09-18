@@ -4,7 +4,8 @@
  */
 package Backend;
 
-import Frontend.JFrameTablaTokens;
+import Frontend.TablaErrores;
+import Frontend.TablaTokens;
 
 /**
  *
@@ -14,7 +15,8 @@ public class Token {
 
     private String palabra;
     private int noToken;
-    private JFrameTablaTokens tablaTokens;
+    private TablaTokens tablaTokens;
+    private TablaErrores tablaErrores;
     private int columna;
     private int fila;
     private PalabrasReservadas reservadas;
@@ -23,9 +25,10 @@ public class Token {
     private boolean esPalabra;
     private int noError;
 
-    public Token(JFrameTablaTokens tablaTokens, PalabrasReservadas reservadas) {
+    public Token(TablaTokens tablaTokens, TablaErrores tablaErrores, PalabrasReservadas reservadas) {
         this.reservadas = reservadas;
         this.tablaTokens = tablaTokens;
+        this.tablaErrores = tablaErrores;
         fila = 1;
     }
 
@@ -66,13 +69,14 @@ public class Token {
 
     }
 
-    public void reportarError(String tipoError, int fila, int columna) {
+    public void reportarError(ReporteErrores reporteErrores, String lexema, String tipoError, int fila, int columna) {
         noError++;
-        System.out.println(noError + " " + tipoError + " Fila: " + fila + " Columna: " + columna);
-
+        System.out.println(noError + " " + lexema + " "+ tipoError + " Fila: " + fila + " Columna: " + columna);
+        tablaErrores.agregarError(noError, lexema, tipoError, columna, fila);
+        reporteErrores.agregarError(noError ,lexema, tipoError, fila, columna);
     }
 
-    public void analizarArchivo(String texto, ReporteTokens nuevoReporteTokens) {
+    public void analizarArchivo(String texto, ReporteTokens nuevoReporteTokens, ReporteErrores reporteErrores) {
 
         for (int i = 0; i < texto.length(); i++) {
 
@@ -94,18 +98,15 @@ public class Token {
                 }
                 reconcerLexema(lexema, nuevoReporteTokens, colInicio);
                 esPalabra = false;
-            }
-
-            //q0 -> q2 esto nos permite detectar los delimitadores y los operadores
-            if (i < texto.length() && esDelimitador(texto.charAt(i)) || esOperador(caracterActual)) {
+            } //q0 -> q2 esto nos permite detectar los delimitadores y los operadores
+            else if (i < texto.length()
+                    && (esDelimitador(texto.charAt(i)) || esOperador(caracterActual))) {
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
                 lexema.append(texto.charAt(i));
                 reconcerLexema(lexema, nuevoReporteTokens, colInicio);
-            }
-
-            //q0 -> q3 esto nos permite reconer la estructura de las cadenas de texto
-            if (i < texto.length() && caracterActual == '"') {
+            } //q0 -> q3 esto nos permite reconer la estructura de las cadenas de texto
+            else if (i < texto.length() && caracterActual == '"') {
                 esLiteral = true;
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
@@ -118,14 +119,12 @@ public class Token {
                 if (i < texto.length() && texto.charAt(i) == '"') {
                     reconcerLexema(lexema, nuevoReporteTokens, colInicio + 1);
                 } else {
-                    reportarError("no se cerro la cadena", fila, colInicio);
+                    reportarError(reporteErrores ,lexema.toString(), "no se cerro la cadena", fila, colInicio);
                 }
-                
-                esLiteral = false;
-            }
 
-            //q0 -> q5 esto nos permite reconer la estructura de los comentarios
-            if (i < texto.length() - 1 && texto.charAt(i) == '/' && texto.charAt(i + 1) == '*') {
+                esLiteral = false;
+            } //q0 -> q5 esto nos permite reconer la estructura de los comentarios
+            else if (i < texto.length() - 1 && texto.charAt(i) == '/' && texto.charAt(i + 1) == '*') {
                 esComentario = true;
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
@@ -137,12 +136,11 @@ public class Token {
                     lexema.append(texto.charAt(i));
                     i++;
                 }
-                
+
                 reconcerLexema(lexema, nuevoReporteTokens, colInicio);
                 esComentario = false;
-            }
-            //q5 -> q9 esto nos permite reconer la estructura de los comentarios
-            if (i < texto.length() - 1 && texto.charAt(i) == '/' && texto.charAt(i + 1) == '/') {
+            } //q5 -> q9 esto nos permite reconer la estructura de los comentarios
+            else if (i < texto.length() - 1 && texto.charAt(i) == '/' && texto.charAt(i + 1) == '/') {
                 esComentario = true;
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
@@ -153,10 +151,8 @@ public class Token {
                 }
                 reconcerLexema(lexema, nuevoReporteTokens, colInicio);
                 esComentario = false;
-            }
-
-            //q0 -> q10 esto nos permite detectar el conector "->"
-            if (i < texto.length() - 1 && caracterActual == '-' && texto.charAt(i + 1) == '>') {
+            } //q0 -> q10 esto nos permite detectar el conector "->"
+            else if (i < texto.length() - 1 && caracterActual == '-' && texto.charAt(i + 1) == '>') {
                 esPalabra = true;
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
@@ -166,10 +162,8 @@ public class Token {
                 reconcerLexema(lexema, nuevoReporteTokens, colInicio);
                 esPalabra = false;
 
-            }
-
-            //q0 -> q12 nos permite detectar los numeros enteros y decimales
-            if (i < texto.length() && esDigito(caracterActual)) {
+            } //q0 -> q12 nos permite detectar los numeros enteros y decimales
+            else if (i < texto.length() && esDigito(caracterActual)) {
                 esLiteral = true;
                 int colInicio = columna;
                 StringBuilder lexema = new StringBuilder();
@@ -198,9 +192,20 @@ public class Token {
                 esLiteral = false;
             }
 
-         
+            // reporte de errores 
+            if (i < texto.length() && texto.charAt(i) != '\n'
+                    && texto.charAt(i) != '\s'
+                    && texto.charAt(i) != '>'
+                    && texto.charAt(i) != '"'
+                    && texto.charAt(i) != '/'
+                    && texto.charAt(i) != '*'
+                    && !esOperador(texto.charAt(i))
+                    && !esLetra(texto.charAt(i))
+                    && !esDelimitador(texto.charAt(i))
+                    && !esDigito(texto.charAt(i))) {
+                reportarError(reporteErrores, String.valueOf(texto.charAt(i)), "Caracter no reconocido", fila, columna);
 
-            
+            }
 
             // Nos permite contabilizar las lines y reciniciar las columnas cuando estas acaben
             if (i < texto.length() && texto.charAt(i) == '\n') {
@@ -209,6 +214,7 @@ public class Token {
             }
 
         }
+
     }
 
     public boolean esOperador(char caracter) {

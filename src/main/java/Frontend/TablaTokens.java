@@ -4,7 +4,7 @@
  */
 package Frontend;
 
-import Backend.ReporteEstadisticas;
+
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.ImageIcon;
@@ -15,9 +15,9 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author felip
  */
-public class JFrameTablaTokens extends javax.swing.JFrame {
+public class TablaTokens extends javax.swing.JFrame {
 
-    public JFrameTablaTokens() {
+    public TablaTokens() {
         initComponents();
         setIconImage(new ImageIcon(getClass().getResource("/Imagenes/IconoLista.png")).getImage());
 
@@ -47,7 +47,6 @@ public class JFrameTablaTokens extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableTokens = new javax.swing.JTable();
-        jMenuBar1 = new javax.swing.JMenuBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Tokens");
@@ -105,11 +104,10 @@ public class JFrameTablaTokens extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.CENTER);
-        setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -117,7 +115,6 @@ public class JFrameTablaTokens extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
