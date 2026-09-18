@@ -7,10 +7,7 @@ package Backend;
 import Frontend.TablaErrores;
 import Frontend.TablaTokens;
 
-/**
- *
- * @author felip
- */
+/// Clase token
 public class Token {
 
     private String palabra;
